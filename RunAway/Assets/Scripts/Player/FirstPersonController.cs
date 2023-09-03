@@ -11,6 +11,16 @@ public class FirstPersonController : MonoBehaviour
     private float MoveSpeed;
     // ジャンプ力
     public float JumpPower;
+    // 感度
+    public float XSensityvity;
+    public float YSensityvity;
+
+    // Quartenion
+    private Quaternion CamRot;
+    private Quaternion CharaRot;
+
+    // Camera
+    public Camera MyCam;
 
     // vector
     private Vector3 JumpVec;
@@ -28,6 +38,25 @@ public class FirstPersonController : MonoBehaviour
 
         // 移動速度を設定
         MoveSpeed = WalkSpeed;
+
+        // 最初の向きを取得
+        CamRot = MyCam.transform.rotation;
+        CharaRot = transform.rotation;
+    }
+
+    private void Update()
+    {
+        // マウスの入力を受け取る
+        float xRot = Input.GetAxis("Mouse X") * YSensityvity;
+        float yRot = Input.GetAxis("Mouse Y") * XSensityvity;
+
+        // カメラとキャラの回転の向きを変更
+        CamRot *= Quaternion.Euler(-yRot, 0, 0);
+        CharaRot *= Quaternion.Euler(0, xRot, 0);
+
+        // カメラとキャラを回転
+        MyCam.transform.localRotation = CamRot;
+        transform.localRotation = CharaRot;
     }
 
     private void FixedUpdate()
@@ -39,7 +68,7 @@ public class FirstPersonController : MonoBehaviour
         if (inputKey.magnitude > 0f)
         {
             // 移動
-            this.gameObject.transform.position += inputKey * MoveSpeed * Time.deltaTime;
+            transform.position += MyCam.transform.forward * inputKey[2] * MoveSpeed * Time.deltaTime + MyCam.transform.right * inputKey[0] * MoveSpeed * Time.deltaTime;
         }
 
         // スペースキーが押されたら
