@@ -545,8 +545,8 @@ GameObject:
   - component: {fileID: 1661862830}
   - component: {fileID: 1661862829}
   - component: {fileID: 1661862828}
-  - component: {fileID: 1661862827}
   - component: {fileID: 1661862833}
+  - component: {fileID: 1661862827}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -566,9 +566,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcdaa45ea1f8a45f28ed5f58d0085d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 5
+  WalkSpeed: 5
+  DashSpeed: 10
   JumpPower: 10
-  IsJump: 0
   MyRib: {fileID: 1661862828}
 --- !u!54 &1661862828
 Rigidbody:
