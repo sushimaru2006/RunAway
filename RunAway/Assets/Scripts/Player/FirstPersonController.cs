@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Utility;
 
 public class FirstPersonController : MonoBehaviour
 {
@@ -28,6 +29,12 @@ public class FirstPersonController : MonoBehaviour
     // bool
     private bool IsJump = false;
 
+    // string
+    private string MoveMode = "idol";
+
+    // instances
+    [SerializeField] private CurveControlledBob headBob_ = new CurveControlledBob();
+
     // RigidBody
     public Rigidbody MyRib;
 
@@ -42,6 +49,9 @@ public class FirstPersonController : MonoBehaviour
         // 最初の向きを取得
         CamRot = MyCam.transform.rotation;
         CharaRot = transform.rotation;
+
+        // bobのセットアップ
+        headBob_.Setup(MyCam, 1.0f);
     }
 
     private void Update()
@@ -67,9 +77,21 @@ public class FirstPersonController : MonoBehaviour
         // 入力があるか
         if (inputKey.magnitude > 0f)
         {
+            // 移動モードを変更
+            MoveMode = MoveMode == "idol" ? "walk" : MoveMode;
+
             // 移動
             transform.position += MyCam.transform.forward * inputKey[2] * MoveSpeed * Time.deltaTime + MyCam.transform.right * inputKey[0] * MoveSpeed * Time.deltaTime;
         }
+        else
+        {
+            // 移動モードを変更
+            MoveMode = "idol";
+        }
+
+        // 歩きのカメラの揺れ
+        Vector3 handBob = headBob_.DoHeadBob(0.8f, MoveMode);
+        MyCam.transform.localPosition = handBob;
 
         // スペースキーが押されたら
         if (Input.GetKey(KeyCode.Space) && !IsJump)
@@ -79,6 +101,9 @@ public class FirstPersonController : MonoBehaviour
 
             // フラグの処理
             IsJump = true;
+
+            // モードを変更
+            MoveMode = "jump";
         }
 
         // Shiftが押され時の処理
@@ -86,6 +111,9 @@ public class FirstPersonController : MonoBehaviour
         {
             // 移動速度を変更
             MoveSpeed = DashSpeed;
+
+            // 移動モードを変更
+            MoveMode = "dash";
         }
 
         // Shiftが離された時
@@ -93,12 +121,19 @@ public class FirstPersonController : MonoBehaviour
         {
             // 移動速度を変更
             MoveSpeed = WalkSpeed;
+
+            // 移動モードを変更
+            MoveMode = "walk";
         }
     }
 
     // 足からジャンプのフラグを変更するためのメソッド
     public void SetFalseIsJump()
     {
+        // フラグの変更
         IsJump = false;
+
+        // モードを変更
+        MoveMode = "walk";
     }
 }
