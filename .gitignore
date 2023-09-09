@@ -73,3 +73,4 @@ crashlytics-build.properties
 
 # Path
 RunAway/Library/PackageCache/com.unity.burst@1.8.8/.Runtime/libburst-llvm-15.dylib
+RunAway/Library/ArtifactDB
